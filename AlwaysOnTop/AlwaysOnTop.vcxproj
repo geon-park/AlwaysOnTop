@@ -185,7 +185,9 @@
   <ItemGroup>
     <ClInclude Include="AlwaysOnTop.h" />
     <ClInclude Include="AlwaysOnTopDlg.h" />
-    <ClInclude Include="PGProcessList.h" />
+    <ClInclude Include="WindowEntry.h" />
+    <ClInclude Include="WindowEntryFactory.h" />
+    <ClInclude Include="WindowsListFactory.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -193,7 +195,9 @@
   <ItemGroup>
     <ClCompile Include="AlwaysOnTop.cpp" />
     <ClCompile Include="AlwaysOnTopDlg.cpp" />
-    <ClCompile Include="PGProcessList.cpp" />
+    <ClCompile Include="WindowEntry.cpp" />
+    <ClCompile Include="WindowEntryFactory.cpp" />
+    <ClCompile Include="WindowsListFactory.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
