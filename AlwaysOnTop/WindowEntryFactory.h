@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include "WindowEntry.h"
+#include "WindowIcon.h"
 
 class WindowEntryFactory
 {

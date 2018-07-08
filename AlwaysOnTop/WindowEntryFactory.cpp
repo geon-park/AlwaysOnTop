@@ -20,9 +20,7 @@ WindowEntry WindowEntryFactory::Create(HWND hWnd)
 	DWORD processId;
 	::GetWindowThreadProcessId(hWnd, &processId);
 
-	HICON iconHandle = (HICON)SendMessageW(hWnd, WM_GETICON, ICON_BIG, 0);
-	if (iconHandle == nullptr)
-		iconHandle = reinterpret_cast<HICON>(GetClassLongPtrW(hWnd, GCLP_HICON));
+	HICON iconHandle = WindowIcon::GetAppIcon(hWnd);
 
 	BOOL isVisible = !::IsIconic(hWnd);
 	

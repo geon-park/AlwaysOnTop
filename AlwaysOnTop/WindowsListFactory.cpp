@@ -52,10 +52,7 @@ std::vector<WindowEntry> WindowsListFactory::GetProcessList()
 	}, (LPARAM)&list);
 	
 	std::sort(list.begin(), list.end(), [](WindowEntry a, WindowEntry b) {
-		int result = a.Title.compare(b.Title);
-		if (result == 0)
-			return a.HWnd < b.HWnd;
-		return result < 0;
+		return a.HWnd < b.HWnd;
 	});
 	
 	return std::move(list);
