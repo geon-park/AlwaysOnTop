@@ -188,6 +188,7 @@
     <ClInclude Include="WindowEntry.h" />
     <ClInclude Include="WindowEntryFactory.h" />
     <ClInclude Include="WindowIcon.h" />
+    <ClInclude Include="WindowsListCtrl.h" />
     <ClInclude Include="WindowsListFactory.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="WindowEntry.cpp" />
     <ClCompile Include="WindowEntryFactory.cpp" />
     <ClCompile Include="WindowIcon.cpp" />
+    <ClCompile Include="WindowsListCtrl.cpp" />
     <ClCompile Include="WindowsListFactory.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -1,4 +1,4 @@
-﻿
+
 // AlwaysOnTopDlg.cpp : implementation file
 //
 
@@ -119,46 +119,7 @@ BOOL CAlwaysOnTopDlg::OnInitDialog()
 	m_ListWnd.InsertColumn(2, _T("Handle"), LVCFMT_LEFT, 100);
 	m_ListWnd.InsertColumn(3, _T("Process"), LVCFMT_LEFT, 200);
 
-	m_ListWnd.DeleteAllItems();
-
-	std::vector<WindowEntry> list = m_proclist.GetProcessList();
-
-	int indexImage = 1;
-	int nWidth = 0;
-	int nHeight = 0;
-	ICONINFO iconInfo;
-	::ZeroMemory(&iconInfo, sizeof(iconInfo));
-	::GetIconInfo(list[indexImage].IconHandle, &iconInfo);
-
-	BITMAP bmp;
-	::ZeroMemory(&bmp, sizeof(bmp));
-	if (iconInfo.hbmColor)
-	{
-		const int nWrittenBytes = GetObject(iconInfo.hbmColor, sizeof(bmp), &bmp);
-		if (nWrittenBytes > 0)
-		{
-			nWidth = bmp.bmWidth;
-			nHeight = bmp.bmHeight;
-		}
-	}
-	else if (iconInfo.hbmMask)
-	{
-		// Icon has no color plane, image data stored in mask
-		const int nWrittenBytes = GetObject(iconInfo.hbmMask, sizeof(bmp), &bmp);
-		if (nWrittenBytes > 0)
-		{
-			nWidth = bmp.bmWidth;
-			nHeight = bmp.bmHeight / 2;
-			// myinfo.nBitsPerPixel = 1;
-		}
-	}
-	if (iconInfo.hbmColor)
-		DeleteObject(iconInfo.hbmColor);
-	if (iconInfo.hbmMask)
-		DeleteObject(iconInfo.hbmMask);
-
-	m_imageList.Create(nWidth, nHeight, ILC_COLOR32, 8, 8);
-	m_imageList.Add(list[indexImage].IconHandle);
+	m_imageList.Create(0x20, 0x20, ILC_COLOR32, 8, 8);
 	m_ListWnd.SetImageList(&m_imageList, LVSIL_SMALL);
 	
 	UpdateWindowList();
@@ -280,6 +241,14 @@ void CAlwaysOnTopDlg::UpdateWindowList()
 {
 	int index = 0;
 	std::vector<WindowEntry> list = m_proclist.GetProcessList();
+	
+	/*
+	CBitmap bmpIcon;
+	WindowIcon::HIconToCBitmap(procInfo.IconHandle, &bmpIcon, 0x20);
+	m_imageList.Add(&bmpIcon, RGB(0xFF, 0xFF, 0xFF));
+	bmpIcon.DeleteObject();
+	*/
+
 	for (auto procInfo : list)
 	{
 		wchar_t curHWnd[16] = { 0, };
@@ -290,7 +259,12 @@ void CAlwaysOnTopDlg::UpdateWindowList()
 		int cmpResult = wcscmp(curHWnd, hwnd);
 		if (index == m_ListWnd.GetItemCount() || cmpResult < 0)
 		{
-			m_ListWnd.InsertItem(index, procInfo.Title.c_str());
+			CBitmap bmpIcon;
+			WindowIcon::HIconToCBitmap(procInfo.IconHandle, &bmpIcon, DefaultIconSize);
+			m_imageList.Add(&bmpIcon, RGB(0x00, 0x00, 0x00));
+			bmpIcon.DeleteObject();
+
+			m_ListWnd.InsertItem(index, procInfo.Title.c_str(), index);
 
 			wsprintf(curHWnd, L"%08X", procInfo.ProcessId);
 			m_ListWnd.SetItem(index, 1, LVIF_TEXT, curHWnd, -1, 0, 0, 0);
@@ -304,7 +278,7 @@ void CAlwaysOnTopDlg::UpdateWindowList()
 			wchar_t title[1024] = { 0, };
 			m_ListWnd.GetItemText(index, 0, title, 1024);
 			if (procInfo.Title.compare(title) != 0 )
-				m_ListWnd.SetItem(index, 0, LVIF_TEXT, procInfo.Title.c_str(), -1, 0, 0, 0);
+				m_ListWnd.SetItem(index, 0, LVIF_TEXT, procInfo.Title.c_str(), index, 0, 0, 0);
 			++index;
 		}
 		else // if (cmpResult > 0)
