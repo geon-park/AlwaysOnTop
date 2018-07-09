@@ -118,12 +118,9 @@ BOOL CAlwaysOnTopDlg::OnInitDialog()
 	m_ListWnd.InsertColumn(1, _T("PID"), LVCFMT_LEFT, 100);
 	m_ListWnd.InsertColumn(2, _T("Handle"), LVCFMT_LEFT, 100);
 	m_ListWnd.InsertColumn(3, _T("Process"), LVCFMT_LEFT, 200);
-
-	m_imageList.Create(0x20, 0x20, ILC_COLOR32, 8, 8);
-	m_ListWnd.SetImageList(&m_imageList, LVSIL_SMALL);
 	
-	UpdateWindowList();
-	SetTimer(1394, 10000, NULL);
+	m_ListWnd.UpdateWindowList();
+	SetTimer(1394, 2000, nullptr);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -183,7 +180,7 @@ HCURSOR CAlwaysOnTopDlg::OnQueryDragIcon()
 void CAlwaysOnTopDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: Add your message handler code here and/or call default
-	UpdateWindowList();
+	m_ListWnd.UpdateWindowList();
 
 	CDialog::OnTimer(nIDEvent);
 }
@@ -215,14 +212,14 @@ void CAlwaysOnTopDlg::ReplaceCtrl()
 	GetClientRect(&rc);
 
 	CRect rcCtrl(rc);
-	HDWP hdwp = ::BeginDeferWindowPos(GetWindowedChildCount());
+	const HDWP hdwp = ::BeginDeferWindowPos(GetWindowedChildCount());
 
 	if (NULL != m_ListWnd.GetSafeHwnd())
 	{
 		rcCtrl.left = rc.left + 10;
 		rcCtrl.top = rc.top + 10;
 
-		::DeferWindowPos(hdwp, m_ListWnd.GetSafeHwnd(), NULL, rcCtrl.left, rcCtrl.top, rc.Width() - 20, rc.Height() - 80, SWP_NOZORDER);
+		::DeferWindowPos(hdwp, m_ListWnd.GetSafeHwnd(), nullptr, rcCtrl.left, rcCtrl.top, rc.Width() - 20, rc.Height() - 80, SWP_NOZORDER);
 	}
 
 	if (NULL != m_BtnTop.GetSafeHwnd())
@@ -231,99 +228,11 @@ void CAlwaysOnTopDlg::ReplaceCtrl()
 		rcCtrl.left = (rc.Width() / 2) - 60;
 		rcCtrl.top = rc.Height() - 60;
 
-		::DeferWindowPos(hdwp, m_BtnTop.GetSafeHwnd(), NULL, rcCtrl.left, rcCtrl.top, 120, 30, SWP_NOZORDER);
+		::DeferWindowPos(hdwp, m_BtnTop.GetSafeHwnd(), nullptr, rcCtrl.left, rcCtrl.top, 120, 30, SWP_NOZORDER);
 	}
 
 	::EndDeferWindowPos(hdwp);
 }
-
-void CAlwaysOnTopDlg::UpdateWindowList()
-{
-	int index = 0;
-	std::vector<WindowEntry> list = m_proclist.GetProcessList();
-	
-	/*
-	CBitmap bmpIcon;
-	WindowIcon::HIconToCBitmap(procInfo.IconHandle, &bmpIcon, 0x20);
-	m_imageList.Add(&bmpIcon, RGB(0xFF, 0xFF, 0xFF));
-	bmpIcon.DeleteObject();
-	*/
-
-	for (auto procInfo : list)
-	{
-		wchar_t curHWnd[16] = { 0, };
-		wsprintf(curHWnd, L"%08X", procInfo.HWnd);
-		wchar_t hwnd[16] = { 0, };
-		m_ListWnd.GetItemText(index, 2, hwnd, 16);
-
-		int cmpResult = wcscmp(curHWnd, hwnd);
-		if (index == m_ListWnd.GetItemCount() || cmpResult < 0)
-		{
-			CBitmap bmpIcon;
-			WindowIcon::HIconToCBitmap(procInfo.IconHandle, &bmpIcon, DefaultIconSize);
-			m_imageList.Add(&bmpIcon, RGB(0x00, 0x00, 0x00));
-			bmpIcon.DeleteObject();
-
-			m_ListWnd.InsertItem(index, procInfo.Title.c_str(), index);
-
-			wsprintf(curHWnd, L"%08X", procInfo.ProcessId);
-			m_ListWnd.SetItem(index, 1, LVIF_TEXT, curHWnd, -1, 0, 0, 0);
-			wsprintf(curHWnd, L"%08X", procInfo.HWnd);
-			m_ListWnd.SetItem(index, 2, LVIF_TEXT, curHWnd, -1, 0, 0, 0);
-			m_ListWnd.SetItem(index, 3, LVIF_TEXT, procInfo.ProcessName.c_str(), -1, 0, 0, 0);
-			++index;
-		}
-		else if (cmpResult == 0)
-		{
-			wchar_t title[1024] = { 0, };
-			m_ListWnd.GetItemText(index, 0, title, 1024);
-			if (procInfo.Title.compare(title) != 0 )
-				m_ListWnd.SetItem(index, 0, LVIF_TEXT, procInfo.Title.c_str(), index, 0, 0, 0);
-			++index;
-		}
-		else // if (cmpResult > 0)
-		{
-			while (true)
-			{
-				m_ListWnd.GetItemText(index, 2, hwnd, 16);
-				cmpResult = wcscmp(curHWnd, hwnd);
-
-				if (cmpResult > 0)
-				{
-					m_ListWnd.DeleteItem(index);
-					continue;
-				}
-				else if (cmpResult == 0)
-				{
-					wchar_t title[1024] = { 0, };
-					m_ListWnd.GetItemText(index, 0, title, 1024);
-					if (procInfo.Title.compare(title) != 0)
-						m_ListWnd.SetItem(index, 0, LVIF_TEXT, procInfo.Title.c_str(), -1, 0, 0, 0);
-					++index;
-					break;
-				}
-				else
-				{
-					m_ListWnd.InsertItem(index, procInfo.Title.c_str());
-
-					wsprintf(curHWnd, L"%08X", procInfo.ProcessId);
-					m_ListWnd.SetItem(index, 1, LVIF_TEXT, curHWnd, -1, 0, 0, 0);
-					wsprintf(curHWnd, L"%08X", procInfo.HWnd);
-					m_ListWnd.SetItem(index, 2, LVIF_TEXT, curHWnd, -1, 0, 0, 0);
-					m_ListWnd.SetItem(index, 3, LVIF_TEXT, procInfo.ProcessName.c_str(), -1, 0, 0, 0);
-					++index;
-					break;
-				}
-			}
-			
-		}
-	}
-	for (int i = m_ListWnd.GetItemCount() ; i >= index ; --i)
-	{
-		m_ListWnd.DeleteItem(i);
-	}
-}
-
 
 void CAlwaysOnTopDlg::OnBnClickedBtnTop()
 {

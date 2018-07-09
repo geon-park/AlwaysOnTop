@@ -4,9 +4,7 @@
 
 #pragma once
 #include "WindowIcon.h"
-#include "WindowsListFactory.h"
 #include "WindowsListCtrl.h"
-
 
 // CAlwaysOnTopDlg dialog
 class CAlwaysOnTopDlg : public CDialog
@@ -25,15 +23,10 @@ protected:
 
 private:
 	void ReplaceCtrl();
-	void UpdateWindowList();
 
 private:
 	WindowsListCtrl m_ListWnd;
 	CButton m_BtnTop;
-	WindowsListFactory m_proclist;
-	CImageList m_imageList;
-
-	const int DefaultIconSize = 0x20;
 
 // Implementation
 protected:

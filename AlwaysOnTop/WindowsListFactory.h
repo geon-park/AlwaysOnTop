@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <vector>
+#include <list>
 #include <string>
 #include <map>
 
@@ -13,7 +14,7 @@ public:
 	WindowsListFactory();
 	~WindowsListFactory();
 
-	std::vector<WindowEntry> GetProcessList();
+	std::list<WindowEntry> GetProcessList();
 
 	static bool EligibleForActivation(HWND hWnd, HWND lShellWindow);
 	static HWND GetLastVisibleActivePopUpOfWindow(HWND window);

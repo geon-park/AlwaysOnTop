@@ -22,9 +22,9 @@ const std::vector<std::wstring> WindowsListFactory::WindowsClassNamesToSkip = {
 	L"Button"
 };
 
-std::vector<WindowEntry> WindowsListFactory::GetProcessList()
+std::list<WindowEntry> WindowsListFactory::GetProcessList()
 {
-	std::vector<WindowEntry> list;
+	std::list<WindowEntry> list;
 	
 	::EnumWindows([] (HWND hWnd, LPARAM lParam) -> BOOL {
 		HWND lShellWindow = GetShellWindow();
@@ -44,14 +44,18 @@ std::vector<WindowEntry> WindowsListFactory::GetProcessList()
 		if (IsKnownException(window))
 			return TRUE;
 
-		std::vector<WindowEntry>* pList = reinterpret_cast<std::vector<WindowEntry>*>(lParam);
+		std::list<WindowEntry>* pList = reinterpret_cast<std::list<WindowEntry>*>(lParam);
 		pList->push_back(window);
 
 		return TRUE;
 
 	}, (LPARAM)&list);
 	
-	std::sort(list.begin(), list.end(), [](WindowEntry a, WindowEntry b) {
+	/*std::sort(list.begin(), list.end(), [](WindowEntry a, WindowEntry b) {
+		return a.HWnd < b.HWnd;
+	});
+	*/
+	list.sort([](WindowEntry a, WindowEntry b) {
 		return a.HWnd < b.HWnd;
 	});
 	
