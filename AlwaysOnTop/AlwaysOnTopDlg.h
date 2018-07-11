@@ -11,7 +11,7 @@ class CAlwaysOnTopDlg : public CDialog
 {
 // Construction
 public:
-	CAlwaysOnTopDlg(CWnd* pParent = NULL);	// standard constructor
+	CAlwaysOnTopDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME

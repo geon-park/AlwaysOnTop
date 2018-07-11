@@ -3,6 +3,7 @@
 #include "WindowIcon.h"
 #include "WindowsListFactory.h"
 
+#include <list>
 #include <string>
 
 // WindowsListCtrl
@@ -19,7 +20,8 @@ public:
 	void UpdateWindowList();
 
 private:
-	WindowsListFactory m_proclist;
+	WindowsListFactory windows_list_factory_;
+	std::list<WindowEntry> proc_list_;
 	const int default_icons_size_ = 32;
 	const int default_margin_size_ = 4;
 

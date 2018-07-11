@@ -39,7 +39,8 @@ std::list<WindowEntry> WindowsListFactory::GetProcessList()
 			return TRUE;
 		}
 
-		window.ProcessName = GetProcessNameFromPID(window.ProcessId);
+		window.FullProcessName = GetProcessNameFromPID(window.ProcessId);
+		window.ProcessName = std::wstring(::PathFindFileNameW(window.FullProcessName.c_str()));
 
 		if (IsKnownException(window))
 			return TRUE;
@@ -127,7 +128,5 @@ std::wstring WindowsListFactory::GetProcessNameFromPID(DWORD processId)
 	if (FALSE == ::QueryFullProcessImageNameW(hProcess, 0, procName, &length))
 		return std::wstring();
 	
-	std::wstring result = std::wstring(::PathFindFileNameW(procName));
-
-	return result;
+	return std::wstring(procName);
 }

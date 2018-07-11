@@ -14,9 +14,14 @@ WindowIcon::~WindowIcon()
 
 HICON WindowIcon::GetAppIcon(HWND hWnd)
 {
-	HICON iconHandle = (HICON)SendMessageW(hWnd, WM_GETICON, ICON_BIG, 0);
+	HICON iconHandle = nullptr;
+	iconHandle = reinterpret_cast<HICON>(GetClassLongPtrW(hWnd, GCLP_HICON));
 	if (iconHandle == nullptr)
-		iconHandle = reinterpret_cast<HICON>(GetClassLongPtrW(hWnd, GCLP_HICON));
+		iconHandle = reinterpret_cast<HICON>(SendMessageW(hWnd, WM_GETICON, ICON_BIG, 0));
+	if (iconHandle == nullptr)
+		iconHandle = reinterpret_cast<HICON>(SendMessageW(hWnd, WM_GETICON, ICON_SMALL, 0));
+	if (iconHandle == nullptr)
+		iconHandle = reinterpret_cast<HICON>(SendMessageW(hWnd, WM_GETICON, ICON_SMALL2, 0));
 
 	return iconHandle;
 }
@@ -26,12 +31,12 @@ CSize WindowIcon::HIconToCBitmap(HICON hIcon, CBitmap* bmpIcon, const int defaul
 	CBitmap *pOldBmp = nullptr, *pOldBmp2 = nullptr;
 	CDC memDC, memDC2;
 	CBitmap bmpTemp;
-	bool usableSize = true;
+	bool usable_size = true;
 
 	CSize size = GetIconSize(hIcon);
 	if (size.cx == 0)
 	{
-		usableSize = false;
+		usable_size = false;
 		size.cx = defaultSize;
 		size.cy = defaultSize;
 	}
@@ -40,7 +45,7 @@ CSize WindowIcon::HIconToCBitmap(HICON hIcon, CBitmap* bmpIcon, const int defaul
 	bmpTemp.CreateBitmap(size.cx, size.cy, 1, 32, nullptr);
 	pOldBmp = memDC.SelectObject(&bmpTemp);
 	
-	if (false == usableSize)
+	if (!usable_size)
 	{
 		memDC.FillSolidRect(0, 0, size.cx, size.cy, RGB(0xFF, 0xFF, 0xFF));
 	}
@@ -68,7 +73,7 @@ CSize WindowIcon::HIconToCBitmap(HICON hIcon, CBitmap* bmpIcon, const int defaul
 CSize WindowIcon::GetIconSize(HICON hIcon)
 {
 	if (hIcon == nullptr)
-		return { 0, 0 };
+		return {0, 0};
 
 	int nWidth = 0;
 	int nHeight = 0;
@@ -103,5 +108,5 @@ CSize WindowIcon::GetIconSize(HICON hIcon)
 	if (iconInfo.hbmMask)
 		DeleteObject(iconInfo.hbmMask);
 
-	return { nWidth, nHeight };
+	return {nWidth, nHeight};
 }

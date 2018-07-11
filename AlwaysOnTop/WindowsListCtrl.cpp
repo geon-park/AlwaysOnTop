@@ -45,21 +45,21 @@ void WindowsListCtrl::DrawItem(LPDRAWITEMSTRUCT pDrawItemStruct)
 
 	pDC->SelectObject(&font);
 
-	for (int nCol = 0; GetColumn(nCol, &lvc); nCol++)
+	for (auto n_col = 0; GetColumn(n_col, &lvc); n_col++)
 	{
 		wchar_t buffer[1024] = { 0, };
 
 		LV_ITEM lvi;
 		lvi.mask = LVIF_TEXT | LVIF_PARAM;
 		lvi.iItem = pDrawItemStruct->itemID;
-		lvi.iSubItem = nCol;
+		lvi.iSubItem = n_col;
 		lvi.pszText = buffer;
 		lvi.cchTextMax = 1024;
 		VERIFY(GetItem(&lvi));
 
-		if (nCol > 0)
+		if (n_col > 0)
 		{
-			GetColumn(nCol - 1, &lvcprev);
+			GetColumn(n_col - 1, &lvcprev);
 			pDrawItemStruct->rcItem.left += lvcprev.cx;
 			pDrawItemStruct->rcItem.right = pDrawItemStruct->rcItem.left + lvc.cx;
 		}
@@ -75,12 +75,12 @@ void WindowsListCtrl::DrawItem(LPDRAWITEMSTRUCT pDrawItemStruct)
 			pDC->SetTextColor(GetSysColor(COLOR_WINDOWTEXT));
 		}
 
-		if (nCol > 0)
+		if (n_col > 0)
 		{
 			CRect rc(pDrawItemStruct->rcItem);
-			CRect rcTemp(pDrawItemStruct->rcItem);
+			CRect rc_temp(pDrawItemStruct->rcItem);
 			
-			int height = pDC->DrawTextW(buffer, static_cast<int>(wcslen(buffer)), &rcTemp, DT_CALCRECT);
+			int height = pDC->DrawTextW(buffer, static_cast<int>(wcslen(buffer)), &rc_temp, DT_CALCRECT);
 			rc.left += default_margin_size_;
 			rc.top = rc.CenterPoint().y - (height / 2);
 			rc.bottom = rc.top + height;
@@ -91,7 +91,7 @@ void WindowsListCtrl::DrawItem(LPDRAWITEMSTRUCT pDrawItemStruct)
 		{
 			CRect rc(pDrawItemStruct->rcItem);
 			rc.right = rc.left + lvc.cx;
-			CRect rcTemp(&rc);
+			CRect rc_temp(&rc);
 
 			wchar_t hwnd_text[16] = { 0, };
 			GetItemText(pDrawItemStruct->itemID, 2, hwnd_text, 16);
@@ -102,8 +102,8 @@ void WindowsListCtrl::DrawItem(LPDRAWITEMSTRUCT pDrawItemStruct)
 			pDC->DrawIcon(rc.left + default_margin_size_, rc.top + default_margin_size_, hIcon);
 
 			
-			rcTemp.left += (3 * default_margin_size_) + default_icons_size_;
-			int height = pDC->DrawTextW(buffer, static_cast<int>(wcslen(buffer)), &rcTemp, DT_CALCRECT | DT_END_ELLIPSIS);
+			rc_temp.left += (3 * default_margin_size_) + default_icons_size_;
+			const auto height = pDC->DrawTextW(buffer, static_cast<int>(wcslen(buffer)), &rc_temp, DT_CALCRECT | DT_END_ELLIPSIS);
 
 			rc.left += (3 * default_margin_size_) + default_icons_size_;
 			rc.top = rc.CenterPoint().y - (height / 2);
@@ -126,7 +126,7 @@ LRESULT WindowsListCtrl::OnSetFont(WPARAM /*wParam*/, LPARAM /*lParam*/)
 	wp.cx = rc.Width();
 	wp.cy = rc.Height();
 	wp.flags = SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER;
-	SendMessage(WM_WINDOWPOSCHANGED, 0, (LPARAM)&wp);
+	SendMessage(WM_WINDOWPOSCHANGED, 0, reinterpret_cast<LPARAM>(&wp));
 
 	return res;
 }
@@ -139,10 +139,10 @@ void WindowsListCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 
 void WindowsListCtrl::UpdateWindowList()
 {
-	int index = 0;
-	std::list<WindowEntry> list = m_proclist.GetProcessList();
+	auto index = 0;
+	proc_list_ = std::move(windows_list_factory_.GetProcessList());
 
-	for (auto procInfo : list)
+	for (auto procInfo : proc_list_)
 	{
 		wchar_t curHWnd[16] = { 0, };
 		wsprintf(curHWnd, L"%08X", procInfo.HWnd);

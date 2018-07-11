@@ -26,6 +26,9 @@ public:
 
 	BOOL GetIsVisible() const { return _IsVisible; }
 	void PutIsVisible(BOOL isVisible) { _IsVisible = isVisible; }
+
+	std::wstring GetFullProcessName() const { return _FullProcessName; }
+	void PutFullProcessName(std::wstring fullProcessName) { _FullProcessName = fullProcessName; }
 	
 public:
 	__declspec(property(get = GetHWnd, put = PutHWnd)) HWND HWnd;
@@ -34,6 +37,7 @@ public:
 	__declspec(property(get = GetTitle, put = PutTitle)) std::wstring Title;
 	__declspec(property(get = GetIconHandle, put = PutIconHandle)) HICON IconHandle;
 	__declspec(property(get = GetIsVisible, put = PutIsVisible)) BOOL IsVisible;
+	__declspec(property(get = GetFullProcessName, put = PutFullProcessName)) std::wstring FullProcessName;
 
 private:
 	HWND _HWnd;
@@ -42,5 +46,6 @@ private:
 	std::wstring _Title;
 	HICON _IconHandle;
 	BOOL _IsVisible;
+	std::wstring _FullProcessName;
 };
 

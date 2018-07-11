@@ -52,7 +52,7 @@ END_MESSAGE_MAP()
 
 
 
-CAlwaysOnTopDlg::CAlwaysOnTopDlg(CWnd* pParent /*=NULL*/)
+CAlwaysOnTopDlg::CAlwaysOnTopDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_ALWAYSONTOP_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -90,7 +90,7 @@ BOOL CAlwaysOnTopDlg::OnInitDialog()
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
 	CMenu* pSysMenu = GetSystemMenu(FALSE);
-	if (pSysMenu != NULL)
+	if (pSysMenu != nullptr)
 	{
 		BOOL bNameValid;
 		CString strAboutMenu;
@@ -205,7 +205,7 @@ void CAlwaysOnTopDlg::OnSize(UINT nType, int cx, int cy)
 
 void CAlwaysOnTopDlg::ReplaceCtrl()
 {
-	if (NULL == GetSafeHwnd())
+	if (nullptr == GetSafeHwnd())
 		return;
 
 	CRect rc;
@@ -214,7 +214,7 @@ void CAlwaysOnTopDlg::ReplaceCtrl()
 	CRect rcCtrl(rc);
 	const HDWP hdwp = ::BeginDeferWindowPos(GetWindowedChildCount());
 
-	if (NULL != m_ListWnd.GetSafeHwnd())
+	if (nullptr != m_ListWnd.GetSafeHwnd())
 	{
 		rcCtrl.left = rc.left + 10;
 		rcCtrl.top = rc.top + 10;
@@ -222,7 +222,7 @@ void CAlwaysOnTopDlg::ReplaceCtrl()
 		::DeferWindowPos(hdwp, m_ListWnd.GetSafeHwnd(), nullptr, rcCtrl.left, rcCtrl.top, rc.Width() - 20, rc.Height() - 80, SWP_NOZORDER);
 	}
 
-	if (NULL != m_BtnTop.GetSafeHwnd())
+	if (nullptr != m_BtnTop.GetSafeHwnd())
 	{
 		
 		rcCtrl.left = (rc.Width() / 2) - 60;
