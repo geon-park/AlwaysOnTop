@@ -114,10 +114,10 @@ BOOL CAlwaysOnTopDlg::OnInitDialog()
 
 	m_ListWnd.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
 
-	m_ListWnd.InsertColumn(0, _T("Title"), LVCFMT_LEFT, 500);
-	m_ListWnd.InsertColumn(1, _T("PID"), LVCFMT_LEFT, 100);
-	m_ListWnd.InsertColumn(2, _T("Handle"), LVCFMT_LEFT, 100);
-	m_ListWnd.InsertColumn(3, _T("Process"), LVCFMT_LEFT, 200);
+	m_ListWnd.InsertColumn(0, L"Title", LVCFMT_LEFT, 500);
+	m_ListWnd.InsertColumn(1, L"PID", LVCFMT_LEFT, 100);
+	m_ListWnd.InsertColumn(2, L"Handle", LVCFMT_LEFT, 100);
+	m_ListWnd.InsertColumn(3, L"Process", LVCFMT_LEFT, 200);
 	
 	m_ListWnd.UpdateWindowList();
 	SetTimer(1394, 2000, nullptr);

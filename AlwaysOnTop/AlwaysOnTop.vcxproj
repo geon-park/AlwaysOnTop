@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="AlwaysOnTop.h" />
     <ClInclude Include="AlwaysOnTopDlg.h" />
+    <ClInclude Include="FileVersionInfo.h" />
     <ClInclude Include="WindowEntry.h" />
     <ClInclude Include="WindowEntryFactory.h" />
     <ClInclude Include="WindowIcon.h" />
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClCompile Include="AlwaysOnTop.cpp" />
     <ClCompile Include="AlwaysOnTopDlg.cpp" />
+    <ClCompile Include="FileVersionInfo.cpp" />
     <ClCompile Include="WindowEntry.cpp" />
     <ClCompile Include="WindowEntryFactory.cpp" />
     <ClCompile Include="WindowIcon.cpp" />
