@@ -188,6 +188,7 @@
     <ClInclude Include="FileVersionInfo.h" />
     <ClInclude Include="WindowEntry.h" />
     <ClInclude Include="WindowEntryFactory.h" />
+    <ClInclude Include="WindowHandler.h" />
     <ClInclude Include="WindowIcon.h" />
     <ClInclude Include="WindowsListCtrl.h" />
     <ClInclude Include="WindowsListFactory.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="FileVersionInfo.cpp" />
     <ClCompile Include="WindowEntry.cpp" />
     <ClCompile Include="WindowEntryFactory.cpp" />
+    <ClCompile Include="WindowHandler.cpp" />
     <ClCompile Include="WindowIcon.cpp" />
     <ClCompile Include="WindowsListCtrl.cpp" />
     <ClCompile Include="WindowsListFactory.cpp" />

@@ -9,6 +9,7 @@
 
 #include <Windows.h>
 #include <ShObjIdl.h>
+#include "WindowHandler.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -254,10 +255,7 @@ void CAlwaysOnTopDlg::OnBnClickedBtnTop()
 		CString szHandle = m_ListWnd.GetItemText(nItem, 2);
 		HWND hWnd = (HWND)wcstoll(szHandle, nullptr, 16);
 
-		::SetForegroundWindow(hWnd);
-
-		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, ::GetWindowLongPtr(hWnd, GWL_EXSTYLE) | WS_EX_TOPMOST);
-		::SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+		WindowHandler::SetTopMostWindow(hWnd);
 	}
 
 }
@@ -271,9 +269,6 @@ void CAlwaysOnTopDlg::OnBnClickedBtnCancel()
 		CString szHandle = m_ListWnd.GetItemText(nItem, 2);
 		HWND hWnd = (HWND)wcstoll(szHandle, nullptr, 16);
 
-		::SetForegroundWindow(hWnd);
-
-		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, ::GetWindowLongPtr(hWnd, GWL_EXSTYLE) & ~WS_EX_TOPMOST);
-		::SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+		WindowHandler::SetNoTopMostWindow(hWnd);
 	}
 }
