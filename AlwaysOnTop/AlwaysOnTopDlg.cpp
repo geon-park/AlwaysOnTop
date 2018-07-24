@@ -64,6 +64,7 @@ void CAlwaysOnTopDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_LST_PROCESS, m_ListWnd);
 	DDX_Control(pDX, IDC_BTN_TOP, m_BtnTop);
+	DDX_Control(pDX, IDC_BTN_CANCEL, m_BtnCancel);
 }
 
 BEGIN_MESSAGE_MAP(CAlwaysOnTopDlg, CDialog)
@@ -74,6 +75,7 @@ BEGIN_MESSAGE_MAP(CAlwaysOnTopDlg, CDialog)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BTN_TOP, &CAlwaysOnTopDlg::OnBnClickedBtnTop)
+	ON_BN_CLICKED(IDC_BTN_CANCEL, &CAlwaysOnTopDlg::OnBnClickedBtnCancel)
 END_MESSAGE_MAP()
 
 
@@ -225,10 +227,19 @@ void CAlwaysOnTopDlg::ReplaceCtrl()
 	if (nullptr != m_BtnTop.GetSafeHwnd())
 	{
 		
-		rcCtrl.left = (rc.Width() / 2) - 60;
+		rcCtrl.left = (rc.Width() / 2) - 130;
 		rcCtrl.top = rc.Height() - 60;
 
 		::DeferWindowPos(hdwp, m_BtnTop.GetSafeHwnd(), nullptr, rcCtrl.left, rcCtrl.top, 120, 30, SWP_NOZORDER);
+	}
+
+	if (nullptr != m_BtnCancel.GetSafeHwnd())
+	{
+
+		rcCtrl.left = (rc.Width() / 2) + 10;
+		rcCtrl.top = rc.Height() - 60;
+
+		::DeferWindowPos(hdwp, m_BtnCancel.GetSafeHwnd(), nullptr, rcCtrl.left, rcCtrl.top, 120, 30, SWP_NOZORDER);
 	}
 
 	::EndDeferWindowPos(hdwp);
@@ -245,8 +256,24 @@ void CAlwaysOnTopDlg::OnBnClickedBtnTop()
 
 		::SetForegroundWindow(hWnd);
 
-		::SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, ::GetWindowLongPtr(hWnd, GWL_EXSTYLE) | WS_EX_TOPMOST);
+		::SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	}
 
+}
+
+void CAlwaysOnTopDlg::OnBnClickedBtnCancel()
+{
+	POSITION pos = m_ListWnd.GetFirstSelectedItemPosition();
+	while (nullptr != pos)
+	{
+		int nItem = m_ListWnd.GetNextSelectedItem(pos);
+		CString szHandle = m_ListWnd.GetItemText(nItem, 2);
+		HWND hWnd = (HWND)wcstoll(szHandle, nullptr, 16);
+
+		::SetForegroundWindow(hWnd);
+
+		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, ::GetWindowLongPtr(hWnd, GWL_EXSTYLE) & ~WS_EX_TOPMOST);
+		::SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	}
 }

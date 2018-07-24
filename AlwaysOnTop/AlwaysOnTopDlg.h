@@ -26,7 +26,7 @@ private:
 
 private:
 	WindowsListCtrl m_ListWnd;
-	CButton m_BtnTop;
+	CButton m_BtnTop, m_BtnCancel;
 
 // Implementation
 protected:
@@ -43,4 +43,5 @@ public:
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnBnClickedBtnTop();
+	afx_msg void OnBnClickedBtnCancel();
 };
